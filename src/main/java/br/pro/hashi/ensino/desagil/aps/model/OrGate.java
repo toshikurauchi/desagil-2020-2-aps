@@ -6,7 +6,11 @@ public class OrGate extends Gate {
     public OrGate()
     {
         super("OrGate", 2);
+
         nands = new NandGate[3];
+        for(int i=0;i<nands.length;i++){
+            nands[i] = new NandGate();
+        }
     }
 
     @Override
@@ -19,12 +23,14 @@ public class OrGate extends Gate {
         if (inputIndex < 0 || inputIndex > 1) {
             throw new IndexOutOfBoundsException(inputIndex);
         }
-        nands[0].connect(0, emitter);
-        nands[0].connect(1, emitter);
-        nands[1].connect(0, emitter);
-        nands[2].connect(1, emitter);
-
-        nands[2].connect(0, nands[0]);
-        nands[2].connect(1, nands[1]);
+        if(inputIndex == 0){
+            nands[0].connect(0, emitter);
+            nands[0].connect(1, emitter);
+            nands[2].connect(inputIndex, nands[0]);
+        }else{
+            nands[1].connect(0, emitter);
+            nands[1].connect(1, emitter);
+            nands[2].connect(inputIndex, nands[1]);
+        }
     }
 }
