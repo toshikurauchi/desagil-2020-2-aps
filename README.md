@@ -2,6 +2,6 @@
 Repositório do projeto das APS de Desenvolvimento Colaborativo Ágil 2020-2
 
 ## Integrantes
-* Afonso Fonseca
+* Antonio Fonseca
 * Beatriz Cabral
 * Bruno Kaczelnik
