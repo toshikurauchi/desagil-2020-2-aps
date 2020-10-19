@@ -84,33 +84,17 @@ public class GateView extends JPanel implements ItemListener, ActionListener {
         Switch signal1 = new Switch();
         Object source = e.getItemSelectable();
 
-        if (e.getStateChange() == ItemEvent.SELECTED){
-            if (source == in0Box) {
-                signal0.turnOn();
-                System.out.println("box1 sel");
-            }
-            else if (source == in1Box){
-                signal1.turnOn();
-                System.out.println("box2 sel");
-            }
-        }
-        if (e.getStateChange() == ItemEvent.DESELECTED){
-            if (source == in0Box) {
-                signal0.turnOff();
-                System.out.println("box1 dis");
-            }
-            else if (source == in1Box){
-                signal1.turnOff();
-                System.out.println("box2 dis");
-            }
-        }
+        if (in0Box.isSelected()){signal0.turnOn();}
+        else {signal0.turnOff();}
+        if (in1Box.isSelected()){signal1.turnOn();}
+        else {signal1.turnOff();}
 
         gate.connect(0,signal0);
         gate.connect(1,signal1);
-        System.out.println(signal0.read());
-        System.out.println(signal1.read());
-        System.out.println(gate.read());
-        System.out.println(" ");
+//        System.out.println(signal0.read());
+//        System.out.println(signal1.read());
+//        System.out.println(gate.read());
+//        System.out.println(" ");
         update();
     }
     @Override
