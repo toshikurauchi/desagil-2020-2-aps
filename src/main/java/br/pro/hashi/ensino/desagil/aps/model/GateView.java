@@ -27,11 +27,12 @@ public class GateView extends JPanel implements ItemListener, ActionListener {
     //construtor
     public GateView(Gate gate) {
         this.gate = gate;
-
         // inicializacao checkbox
         in0Box = new JCheckBox();
         in1Box = new JCheckBox();
         outBox = new JCheckBox();
+
+
 
         // A classe JLabel representa um rótulo, ou seja,
         // um texto não-editável que queremos colocar na
@@ -51,7 +52,7 @@ public class GateView extends JPanel implements ItemListener, ActionListener {
         // Colocamos todas componentes aqui no contêiner.
         add(inLabel);
         add(in0Box);
-        add(in1Box);
+        if (!(gate instanceof NotGate)){add(in1Box);}
         add(outLabel);
         add(outBox);
 
@@ -64,7 +65,7 @@ public class GateView extends JPanel implements ItemListener, ActionListener {
         // adicionamos o "implements ItemListener" lá em cima.
         in0Box.addItemListener(this);
         in1Box.addItemListener(this);
-
+        if (gate instanceof NotGate){outBox.setSelected(true);}
         // O último campo de texto não pode ser editável, pois é
         // só para exibição. Logo, configuramos como desabilitado.
         outBox.setEnabled(false);
@@ -90,7 +91,8 @@ public class GateView extends JPanel implements ItemListener, ActionListener {
         else {signal1.turnOff();}
 
         gate.connect(0,signal0);
-        gate.connect(1,signal1);
+        if (!(gate instanceof NotGate)){gate.connect(1,signal1);}
+//        gate.connect(1,signal1);
 //        System.out.println(signal0.read());
 //        System.out.println(signal1.read());
 //        System.out.println(gate.read());

@@ -67,6 +67,8 @@ public class View extends JPanel implements ItemListener, ActionListener {
 
         // 3. Adicionar essa representação gráfica no JPanel.
         add(gateView);
+
+
     }
 
     // O que esta componente deve fazer quando o usuário
