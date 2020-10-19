@@ -13,12 +13,11 @@ public class GateView extends JPanel implements ActionListener {
     private final JCheckBox[] entradasField;
     private final JCheckBox saidaField;
 
-
     public GateView(Gate gate) {
         this.gate = gate;
         //inputs
         entradasField = new JCheckBox[gate.getInputSize()];
-        saidaField   = new JCheckBox();
+        saidaField    = new JCheckBox();
         //labels
         JLabel entradaLabel = new JLabel("Entrada");
         JLabel saidaLabel   = new JLabel("Saida");
