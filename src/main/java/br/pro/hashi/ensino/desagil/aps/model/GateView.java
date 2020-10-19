@@ -10,7 +10,7 @@ import java.awt.event.ItemListener;
 // simples da Swing. A função dela é simplesmente ser
 // um contêiner para colocar outras componentes dentro.
 // A razão de implementar ActionListener está mais abaixo.
-public class GateView extends JPanel implements ItemListener {
+public class GateView extends JPanel implements ItemListener, ActionListener {
 
     // A ideia é que essa componente gráfica represente
     // um componente especifico. Esse componente que
@@ -80,32 +80,32 @@ public class GateView extends JPanel implements ItemListener {
     // link para ajudar-->https://docs.oracle.com/javase/tutorial/uiswing/components/button.html
     public void itemStateChanged(ItemEvent e) {
 
-        Switch signal;
+        Switch signal0 = new Switch();
+        Switch signal1 = new Switch();
         Object source = e.getItemSelectable();
 
         if (source == in0Box) {
-            signal.turnOn();
-        } else if (source == glassesButton) {
-            index = 1;
-            c = 'g';
+            signal0.turnOn();
+        }
+        else if (source == in1Box){signal1.turnOn();}
 
-        //Now that we know which button was pushed, find out
-        //whether it was selected or deselected.
-        if (e.getStateChange() == ItemEvent.DESELECTED) {
-            c = '-';
+        if (e.getStateChange() == ItemEvent.DESELECTED){
+            if (source == in0Box) { signal0.turnOff();            }
+            else if (source == in1Box){signal1.turnOff();}
         }
 
-        //Apply the change to the string.
-        choices.setCharAt(index, c);
+        
+//        update();
     }
+//    @Override
+//    public void actionPerformed(ActionEvent event) {
+//        update();
+//    }
 
-    /*
-    // O que esta componente deve fazer quando o usuário der um
-    // Enter depois de digitar? Apenas chamar o update, é claro!
+    private void update() {
+        boolean sig1;
+        boolean sig2;
 
-    public void actionPerformed(ActionEvent event) {
-        update();
     }
-    */
 
 }
