@@ -65,7 +65,9 @@ public class GateView extends JPanel implements ItemListener, ActionListener {
         // adicionamos o "implements ItemListener" lá em cima.
         in0Box.addItemListener(this);
         in1Box.addItemListener(this);
-        if (gate instanceof NotGate){outBox.setSelected(true);}
+        if (gate instanceof NotGate){
+            outBox.setSelected(true);
+        }
         // O último campo de texto não pode ser editável, pois é
         // só para exibição. Logo, configuramos como desabilitado.
         outBox.setEnabled(false);

@@ -19,7 +19,7 @@ public class APS {
 
         // Constrói a visão, que também é um controlador.
         // Juntar visão e controlador prejudica a coesão,
-        // mas decidir fazê-lo para simplificar o código.
+        // mas decidir fazê-lo para simplificar o código.git
         View view = new View(model);
 
         // Todas as linhas abaixo já foram explicadas nos Desafios.
