@@ -17,10 +17,10 @@ public class GateView extends JPanel implements ActionListener {
         this.gate = gate;
         //inputs
         entradasField = new JCheckBox[gate.getInputSize()];
-        saidaField    = new JCheckBox();
+        saidaField = new JCheckBox();
         //labels
         JLabel entradaLabel = new JLabel("Entrada");
-        JLabel saidaLabel   = new JLabel("Saida");
+        JLabel saidaLabel = new JLabel("Saida");
 
         add(entradaLabel);
 
@@ -43,10 +43,9 @@ public class GateView extends JPanel implements ActionListener {
     private void update() {
         for (int i = 0; i < entradasField.length; i++) {
             Switch switchEntrada = new Switch();
-            if (entradasField[i].isSelected()){
+            if (entradasField[i].isSelected()) {
                 switchEntrada.turnOn();
-            }
-            else {
+            } else {
                 switchEntrada.turnOff();
             }
             gate.connect(i, switchEntrada);

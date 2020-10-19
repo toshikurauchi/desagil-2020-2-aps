@@ -14,7 +14,7 @@ public class View extends JPanel implements ActionListener {
 
     public View(LinkedList<Gate> model) {
         menu = new JComboBox<>();
-        for (Gate gate : model){
+        for (Gate gate : model) {
             menu.addItem(gate);
         }
 
@@ -25,7 +25,7 @@ public class View extends JPanel implements ActionListener {
         menu.addActionListener(this);
     }
 
-    private void addGateView(int index){
+    private void addGateView(int index) {
         // 1. Usar o índice para pegar o gate do menu.
         Gate gate = menu.getItemAt(index);
 
