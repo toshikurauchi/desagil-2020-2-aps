@@ -18,4 +18,4 @@ public class XorGate extends Gate {
         nand.connect(inputIndex, emitter);
     }
 }
-}
+
