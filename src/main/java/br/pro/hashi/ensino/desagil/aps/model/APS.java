@@ -17,8 +17,6 @@ public class APS {
         model.add(new AndGate());
         model.add(new XorGate());
 
-
-
         // Constrói a visão, que também é um controlador.
         // Juntar visão e controlador prejudica a coesão,
         // mas decidir fazê-lo para simplificar o código.

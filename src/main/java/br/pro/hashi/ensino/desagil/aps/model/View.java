@@ -3,6 +3,7 @@ package br.pro.hashi.ensino.desagil.aps.model;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.LinkedList;
 
@@ -10,7 +11,7 @@ import java.util.LinkedList;
 // simples da Swing(biblioteca grafica padrao java). A função dela é simplesmente ser
 // um contêiner para colocar outras componentes dentro.
 // A razão de implementar ActionListener está mais abaixo.
-public class View extends JPanel implements ItemListener {
+public class View extends JPanel implements ItemListener, ActionListener {
 
     // A ideia é que essa componente gráfica mostre um menu
     // que permite selecionar uma calculadora e também mostre
@@ -50,7 +51,7 @@ public class View extends JPanel implements ItemListener {
         // que addActionListener espera receber um objeto do
         // tipo ActionListener como parâmetro. É por isso que
         // adicionamos o "implements ActionListener" lá em cima.
-        menu.addActionListener(this);
+        menu.addActionListener( this);
     }
 
     // Este método é responsável por adicionar a este JPanel a
@@ -70,7 +71,7 @@ public class View extends JPanel implements ItemListener {
 
     // O que esta componente deve fazer quando o usuário
     // selecionar um item no menu? Bem, ela deve...
-    @Override
+//    @Override
     public void actionPerformed(ActionEvent event) {
 
         // ...tirar a atual representação gráfica de calculadora...
@@ -85,5 +86,10 @@ public class View extends JPanel implements ItemListener {
         // Mantenha esta linha, mas não precisa entendê-la.
         // É necessária para evitar bugs em alguns sistemas.
         ((JFrame) SwingUtilities.getRoot(this)).pack();
+    }
+
+    @Override
+    public void itemStateChanged(ItemEvent e) {
+
     }
 }
