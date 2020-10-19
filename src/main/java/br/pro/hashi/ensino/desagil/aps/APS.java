@@ -8,7 +8,7 @@ import java.util.LinkedList;
 
 public class APS {
     public static void main(String[] args) {
-        LinkedList<Gate> model = new LinkedList<Gate>();
+        LinkedList<Gate> model = new LinkedList<>();
         model.add(new AndGate());
         model.add(new NandGate());
         model.add(new NotGate());
@@ -26,7 +26,6 @@ public class APS {
             frame.pack();
             frame.setVisible(true);
         });
-
 
 
     }
