@@ -10,7 +10,6 @@ public class AndGate extends Gate {
 
         nands[0] = new NandGate();
         nands[1] = new NandGate();
-
     }
 
     @Override

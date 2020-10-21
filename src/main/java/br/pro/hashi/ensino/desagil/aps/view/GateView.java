@@ -12,11 +12,13 @@ public class GateView extends JPanel implements ActionListener {
     private final Gate gate;
     private final JCheckBox[] entradasField;
     private final JCheckBox saidaField;
+    private final Switch[] switches;
 
     public GateView(Gate gate) {
         this.gate = gate;
         //inputs
         entradasField = new JCheckBox[gate.getInputSize()];
+        switches = new Switch[gate.getInputSize()];
         saidaField = new JCheckBox();
         //labels
         JLabel entradaLabel = new JLabel("Entrada");
@@ -25,6 +27,9 @@ public class GateView extends JPanel implements ActionListener {
         add(entradaLabel);
 
         for (int i = 0; i < entradasField.length; i++) {
+            switches[i] = new Switch();
+            gate.connect(i, switches[i]);
+
             entradasField[i] = new JCheckBox();
             add(entradasField[i]);
             entradasField[i].addActionListener(this);
@@ -42,13 +47,11 @@ public class GateView extends JPanel implements ActionListener {
 
     private void update() {
         for (int i = 0; i < entradasField.length; i++) {
-            Switch switchEntrada = new Switch();
             if (entradasField[i].isSelected()) {
-                switchEntrada.turnOn();
+                switches[i].turnOn();
             } else {
-                switchEntrada.turnOff();
+                switches[i].turnOff();
             }
-            gate.connect(i, switchEntrada);
         }
         boolean estadoOutput = gate.read();
         saidaField.setSelected(estadoOutput);
