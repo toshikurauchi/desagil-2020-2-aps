@@ -1,4 +1,8 @@
-package br.pro.hashi.ensino.desagil.aps.model;
+package br.pro.hashi.ensino.desagil.aps.view;
+
+import br.pro.hashi.ensino.desagil.aps.model.Gate;
+import br.pro.hashi.ensino.desagil.aps.model.NotGate;
+import br.pro.hashi.ensino.desagil.aps.model.Switch;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -94,21 +98,19 @@ public class GateView extends JPanel implements ItemListener, ActionListener {
 
         gate.connect(0,signal0);
         if (!(gate instanceof NotGate)){gate.connect(1,signal1);}
+        outBox.setSelected(gate.read());
 //        gate.connect(1,signal1);
 //        System.out.println(signal0.read());
 //        System.out.println(signal1.read());
 //        System.out.println(gate.read());
 //        System.out.println(" ");
-        update();
+//        update();
     }
     @Override
     public void actionPerformed(ActionEvent event) {
-        update();
+//        update();
     }
 
-    private void update() {
-        outBox.setSelected(gate.read());
-
-    }
+//    private void update() {}
 
 }
