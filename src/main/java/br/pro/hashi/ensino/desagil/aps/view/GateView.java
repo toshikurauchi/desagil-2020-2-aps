@@ -1,6 +1,7 @@
 package br.pro.hashi.ensino.desagil.aps.view;
 
 import br.pro.hashi.ensino.desagil.aps.model.Gate;
+import br.pro.hashi.ensino.desagil.aps.model.NandGate;
 import br.pro.hashi.ensino.desagil.aps.model.NotGate;
 import br.pro.hashi.ensino.desagil.aps.model.Switch;
 
@@ -9,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.LinkedList;
 
 // A classe JPanel representa uma das componentes mais
 // simples da Swing. A função dela é simplesmente ser
@@ -23,8 +25,7 @@ public class GateView extends JPanel implements ItemListener, ActionListener {
 
     // A classe JTextField representa uma checkbox.
     //checkboxes de entrada
-    private final JCheckBox in0Box;
-    private final JCheckBox in1Box;
+    private final JCheckBox[] in_Box;
     //checkbox de saida
     private final JCheckBox outBox;
 
@@ -32,8 +33,8 @@ public class GateView extends JPanel implements ItemListener, ActionListener {
     public GateView(Gate gate) {
         this.gate = gate;
         // inicializacao checkbox
-        in0Box = new JCheckBox();
-        in1Box = new JCheckBox();
+        in_Box = new JCheckBox[gate.getInputSize()];
+        for (int i = 0;i < gate.getInputSize();i ++){in_Box[i] = new JCheckBox(); }
         outBox = new JCheckBox();
 
 
@@ -55,8 +56,7 @@ public class GateView extends JPanel implements ItemListener, ActionListener {
 
         // Colocamos todas componentes aqui no contêiner.
         add(inLabel);
-        add(in0Box);
-        if (!(gate instanceof NotGate)){add(in1Box);}
+        for (int i = 0;i< gate.getInputSize();i++){add(in_Box[i]);}
         add(outLabel);
         add(outBox);
 
@@ -67,15 +67,14 @@ public class GateView extends JPanel implements ItemListener, ActionListener {
         // lista. Só que addActionListener espera receber um objeto
         // do tipo ActionListener como parâmetro. É por isso que
         // adicionamos o "implements ItemListener" lá em cima.
-        in0Box.addItemListener(this);
-        in1Box.addItemListener(this);
-        if (gate instanceof NotGate){
-            outBox.setSelected(true);
-        }
+        for (int i = 0;i< gate.getInputSize();i++){ in_Box[i].addItemListener(this); }
+
         // O último campo de texto não pode ser editável, pois é
         // só para exibição. Logo, configuramos como desabilitado.
         outBox.setEnabled(false);
-
+        if ((gate instanceof NotGate) || (gate instanceof NandGate)  ){
+            outBox.setSelected(true);
+        }
         // Update é o método que definimos abaixo para atualizar o
         // último campo de acordo com os valores dos primeiros.
         // Precisamos chamar esse método no final da construção
@@ -87,17 +86,18 @@ public class GateView extends JPanel implements ItemListener, ActionListener {
     // link para ajudar-->https://docs.oracle.com/javase/tutorial/uiswing/components/button.html
     public void itemStateChanged(ItemEvent e) {
 
-        Switch signal0 = new Switch();
-        Switch signal1 = new Switch();
-        Object source = e.getItemSelectable();
+        Switch[] signal = new Switch[gate.getInputSize()];
+        for (int i = 0;i < gate.getInputSize();i ++){signal[i] = new Switch();}
 
-        if (in0Box.isSelected()){signal0.turnOn();}
-        else {signal0.turnOff();}
-        if (in1Box.isSelected()){signal1.turnOn();}
-        else {signal1.turnOff();}
+        for (int i = 0;i < gate.getInputSize();i ++){
+            if (in_Box[i].isSelected()) {signal[i].turnOn();}
+            else {signal[i].turnOff();}
+        }
 
-        gate.connect(0,signal0);
-        if (!(gate instanceof NotGate)){gate.connect(1,signal1);}
+        for (int i = 0;i < gate.getInputSize();i ++){
+            gate.connect(i,signal[i]);
+        }
+
         outBox.setSelected(gate.read());
 //        gate.connect(1,signal1);
 //        System.out.println(signal0.read());
