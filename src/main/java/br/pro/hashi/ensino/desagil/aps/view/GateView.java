@@ -6,35 +6,37 @@ import br.pro.hashi.ensino.desagil.aps.model.NotGate;
 import br.pro.hashi.ensino.desagil.aps.model.Switch;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
+import java.awt.*;
+import java.awt.event.*;
+import java.net.URL;
 import java.util.LinkedList;
 
 // A classe JPanel representa uma das componentes mais
 // simples da Swing. A função dela é simplesmente ser
 // um contêiner para colocar outras componentes dentro.
 // A razão de implementar ActionListener está mais abaixo.
-public class GateView extends JPanel implements ItemListener, ActionListener {
+public class GateView extends FixedPanel implements MouseListener, ItemListener {
 
     // A ideia é que essa componente gráfica represente
     // um componente especifico. Esse componente que
     // está sendo representada é guardado como atributo.
     private final Gate gate;
-
+    private final int entradas;
+    private Color color;
+    private final Image image;
     // A classe JTextField representa uma checkbox.
     //checkboxes de entrada
     private final JCheckBox[] in_Box;
-    //checkbox de saida
     private final JCheckBox outBox;
 
     //construtor
     public GateView(Gate gate) {
+        super(490, 350);
         this.gate = gate;
+        this.entradas =  gate.getInputSize();
         // inicializacao checkbox
         in_Box = new JCheckBox[gate.getInputSize()];
-        for (int i = 0;i < gate.getInputSize();i ++){in_Box[i] = new JCheckBox(); }
+        for (int i = 0;i < entradas;i ++){in_Box[i] = new JCheckBox(); }
         outBox = new JCheckBox();
 
 
@@ -52,14 +54,20 @@ public class GateView extends JPanel implements ItemListener, ActionListener {
         // organizar as componentes dentro dele. A linha abaixo
         // estabelece um dos padrões mais simples: simplesmente
         // colocar uma componente debaixo da outra, alinhadas.
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+//        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         // Colocamos todas componentes aqui no contêiner.
         add(inLabel);
-        for (int i = 0;i< gate.getInputSize();i++){add(in_Box[i]);}
+        for (int i = 0;i< entradas;i++){
+            add(in_Box[i], 20, (int) (140 + 45* Math.pow(-1,i)), 25, 25);
+        }
         add(outLabel);
-        add(outBox);
+        add(outBox,445, 135,50,50);
 
+        String name = gate.toString() + ".png";
+        URL url = getClass().getClassLoader().getResource(name);
+        image = getToolkit().getImage(url);
+        color = Color.BLACK;
         // Um campo de texto tem uma lista de observadores que
         // reagem quando o usuário dá Enter depois de digitar.
         // Usamos o método addActionListener para adicionar esta
@@ -67,7 +75,7 @@ public class GateView extends JPanel implements ItemListener, ActionListener {
         // lista. Só que addActionListener espera receber um objeto
         // do tipo ActionListener como parâmetro. É por isso que
         // adicionamos o "implements ItemListener" lá em cima.
-        for (int i = 0;i< gate.getInputSize();i++){ in_Box[i].addItemListener(this); }
+        for (int i = 0;i< entradas;i++){in_Box[i].addItemListener( this); }
 
         // O último campo de texto não pode ser editável, pois é
         // só para exibição. Logo, configuramos como desabilitado.
@@ -87,30 +95,61 @@ public class GateView extends JPanel implements ItemListener, ActionListener {
     public void itemStateChanged(ItemEvent e) {
 
         Switch[] signal = new Switch[gate.getInputSize()];
-        for (int i = 0;i < gate.getInputSize();i ++){signal[i] = new Switch();}
+        for (int i = 0;i < entradas;i ++){signal[i] = new Switch();}
 
-        for (int i = 0;i < gate.getInputSize();i ++){
+        for (int i = 0;i < entradas;i ++){
             if (in_Box[i].isSelected()) {signal[i].turnOn();}
             else {signal[i].turnOff();}
-        }
-
-        for (int i = 0;i < gate.getInputSize();i ++){
             gate.connect(i,signal[i]);
         }
 
         outBox.setSelected(gate.read());
-//        gate.connect(1,signal1);
-//        System.out.println(signal0.read());
-//        System.out.println(signal1.read());
-//        System.out.println(gate.read());
-//        System.out.println(" ");
-//        update();
-    }
-    @Override
-    public void actionPerformed(ActionEvent event) {
-//        update();
     }
 
+    @Override
+    public void mouseClicked(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
+    }
+    @Override
+    public void paintComponent(Graphics g) {
+
+        // Não podemos esquecer desta linha, pois não somos os
+        // únicos responsáveis por desenhar o painel, como era
+        // o caso nos Desafios. Agora é preciso desenhar também
+        // componentes internas, e isso é feito pela superclasse.
+        super.paintComponent(g);
+
+        // Desenha a imagem, passando sua posição e seu tamanho.
+        g.drawImage(image, 40, 40, 400, 221, this);
+
+        // Desenha um quadrado cheio.
+        g.setColor(color);
+        g.fillRect(445, 200, 25, 25);
+
+        // Linha necessária para evitar atrasos
+        // de renderização em sistemas Linux.
+        getToolkit().sync();
+    }
 //    private void update() {}
 
 }
