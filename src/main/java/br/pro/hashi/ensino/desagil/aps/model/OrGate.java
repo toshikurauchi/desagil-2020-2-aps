@@ -11,6 +11,9 @@ public class OrGate extends Gate {
         nands[0] = new NandGate();
         nands[1] = new NandGate();
         nands[2] = new NandGate();
+
+        nands[2].connect(0, nands[0]);
+        nands[2].connect(1, nands[1]);
     }
 
     @Override
@@ -27,11 +30,9 @@ public class OrGate extends Gate {
         if (inputIndex == 0) {
             nands[0].connect(0, emitter);
             nands[0].connect(1, emitter);
-            nands[2].connect(0, nands[0]);
         } else {
             nands[1].connect(0, emitter);
             nands[1].connect(1, emitter);
-            nands[2].connect(1, nands[1]);
         }
     }
 }
