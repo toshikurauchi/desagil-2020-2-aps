@@ -25,7 +25,7 @@ public class GateView extends FixedPanel implements ActionListener, MouseListene
 
     public GateView(Gate gate) {
         // Largura e altura da janela fixas
-        super(360, 200);
+        super(500 , 280);
 
         this.gate = gate;
 
@@ -53,11 +53,11 @@ public class GateView extends FixedPanel implements ActionListener, MouseListene
         }
 
         if (entradasField.length > 1){
-            add(entradasField[0], 20, 50, 25, 25);
-            add(entradasField[1], 20, 50 + 75, 25, 25);
+            add(entradasField[0], 30, 80, 25, 25);
+            add(entradasField[1], 30, 80 + 75, 25, 25);
         }
         else {
-            add(entradasField[0], 20, 100, 25, 25);
+            add(entradasField[0], 30, 118, 25, 25);
         }
 
         // padrão layout
@@ -108,11 +108,11 @@ public class GateView extends FixedPanel implements ActionListener, MouseListene
         int y = event.getY();
 
         // Se o clique foi dentro do quadrado colorido...
-        if (x >= 210 && x < 235 && y >= 311 && y < 336) {
+        if (x >= 340 && x < 360 && y >= 90 && y < 110) {
 
             // ...então abrimos a janela seletora de cor...
             color = JColorChooser.showDialog(this, null, color);
-
+            saidaField.setColor(color);
             // ...e chamamos repaint para atualizar a tela.
             repaint();
         }
@@ -143,11 +143,11 @@ public class GateView extends FixedPanel implements ActionListener, MouseListene
         super.paintComponent(g);
 
         // Desenha a imagem, passando sua posição e seu tamanho.
-        g.drawImage(image, 20, 20, 320, 160, this);
+        g.drawImage(image, 50, 50, 320, 160, this);
 
         // Desenha um circulo cheio.
         g.setColor(saidaField.getColor());
-        g.fillOval(330, 90, 20, 20);
+        g.fillOval(370, 120, 20, 20);
 
         // g.fillRect(210, 311, 25, 25);
 
