@@ -2,6 +2,7 @@ package br.pro.hashi.ensino.desagil.aps.view;
 
 import br.pro.hashi.ensino.desagil.aps.model.Gate;
 import br.pro.hashi.ensino.desagil.aps.model.Switch;
+import br.pro.hashi.ensino.desagil.aps.model.Light;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,7 +16,7 @@ public class GateView extends FixedPanel implements ActionListener, MouseListene
 
     private final Gate gate;
     private final JCheckBox[] entradasField;
-    private final JCheckBox saidaField;
+    private final Light saidaField;
     private final Switch[] switches;
 
     // Adição dos novos atributos
@@ -24,23 +25,23 @@ public class GateView extends FixedPanel implements ActionListener, MouseListene
 
     public GateView(Gate gate) {
         // Largura e altura da janela fixas
-        super(245, 346);
+        super(360, 200);
 
         this.gate = gate;
 
         //inputs
         entradasField = new JCheckBox[gate.getInputSize()];
         switches = new Switch[gate.getInputSize()];
-        saidaField = new JCheckBox();
+        saidaField = new Light(255, 0, 0);
 
         //labels
-        JLabel entradaLabel = new JLabel("Entrada");
-        JLabel saidaLabel = new JLabel("Saida");
+        // JLabel entradaLabel = new JLabel("Entrada");
+        // JLabel saidaLabel = new JLabel("Saida");
 
         // add(entradaLabel);
 
         // posição e o tamanho de cada componente
-        add(entradaLabel, 10, 10, 75, 25);
+        // add(entradaLabel, 10, 10, 75, 25);
 
 
         for (int i = 0; i < entradasField.length; i++) {
@@ -48,15 +49,25 @@ public class GateView extends FixedPanel implements ActionListener, MouseListene
             gate.connect(i, switches[i]);
 
             entradasField[i] = new JCheckBox();
-            add(entradasField[i], 85, 10, 150, 25);
             entradasField[i].addActionListener(this);
         }
+
+        if (entradasField.length > 1){
+            add(entradasField[0], 20, 50, 25, 25);
+            add(entradasField[1], 20, 50 + 75, 25, 25);
+        }
+        else {
+            add(entradasField[0], 20, 100, 25, 25);
+        }
+
         // padrão layout
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        // setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
 
-        add(saidaLabel, 10, 311, 75, 25);
-        add(saidaField, 85, 311, 120, 25);
+        // add(saidaLabel, 10, 311, 75, 25);
+        // add(saidaField, 85, 311, 120, 25);
+
+        saidaField.connect(0, gate);
 
         color = Color.BLACK;
 
@@ -65,7 +76,7 @@ public class GateView extends FixedPanel implements ActionListener, MouseListene
         image = getToolkit().getImage(url);
 
 
-        saidaField.setEnabled(false);
+        // saidaField.setEnabled(false);
 
         addMouseListener(this);
         update();
@@ -79,8 +90,9 @@ public class GateView extends FixedPanel implements ActionListener, MouseListene
                 switches[i].turnOff();
             }
         }
-        boolean estadoOutput = gate.read();
-        saidaField.setSelected(estadoOutput);
+        repaint();
+        // boolean estadoOutput = gate.read();
+        // saidaField.setSelected(estadoOutput);
     }
 
     @Override
@@ -131,11 +143,13 @@ public class GateView extends FixedPanel implements ActionListener, MouseListene
         super.paintComponent(g);
 
         // Desenha a imagem, passando sua posição e seu tamanho.
-        g.drawImage(image, 10, 80, 221, 221, this);
+        g.drawImage(image, 20, 20, 320, 160, this);
 
-        // Desenha um quadrado cheio.
-        g.setColor(color);
-        g.fillRect(210, 311, 25, 25);
+        // Desenha um circulo cheio.
+        g.setColor(saidaField.getColor());
+        g.fillOval(330, 90, 20, 20);
+
+        // g.fillRect(210, 311, 25, 25);
 
         // Linha necessária para evitar atrasos
         // de renderização em sistemas Linux.
