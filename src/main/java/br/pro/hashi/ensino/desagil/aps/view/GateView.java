@@ -1,8 +1,8 @@
 package br.pro.hashi.ensino.desagil.aps.view;
 
 import br.pro.hashi.ensino.desagil.aps.model.Gate;
-import br.pro.hashi.ensino.desagil.aps.model.Switch;
 import br.pro.hashi.ensino.desagil.aps.model.Light;
+import br.pro.hashi.ensino.desagil.aps.model.Switch;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,10 +17,9 @@ public class GateView extends FixedPanel implements ActionListener, MouseListene
     private final JCheckBox[] entradasField;
     private final Light saidaField;
     private final Switch[] switches;
-
+    private final Image image;
     // Adição dos novos atributos
     private Color color;
-    private final Image image;
 
     public GateView(Gate gate) {
         // Largura e altura da janela fixas
@@ -39,11 +38,10 @@ public class GateView extends FixedPanel implements ActionListener, MouseListene
             entradasField[i].addActionListener(this);
         }
 
-        if (entradasField.length > 1){
+        if (entradasField.length > 1) {
             add(entradasField[0], 40, 48);
             add(entradasField[1], 40, 48 + 76);
-        }
-        else {
+        } else {
             add(entradasField[0], 40, 85);
         }
 
@@ -132,5 +130,5 @@ public class GateView extends FixedPanel implements ActionListener, MouseListene
     }
 }
 
-    // Implementar checkbox no lugar .. A classe JTextField representa um campo de texto.
+// Implementar checkbox no lugar .. A classe JTextField representa um campo de texto.
 
