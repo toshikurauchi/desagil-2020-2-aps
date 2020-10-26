@@ -1,9 +1,6 @@
 package br.pro.hashi.ensino.desagil.aps.view;
 
-import br.pro.hashi.ensino.desagil.aps.model.Gate;
-import br.pro.hashi.ensino.desagil.aps.model.NandGate;
-import br.pro.hashi.ensino.desagil.aps.model.NotGate;
-import br.pro.hashi.ensino.desagil.aps.model.Switch;
+import br.pro.hashi.ensino.desagil.aps.model.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,10 +21,10 @@ public class GateView extends FixedPanel implements MouseListener, ItemListener 
     private final int entradas;
     private Color color;
     private final Image image;
-    // A classe JTextField representa uma checkbox.
+    // A classe JCheckBox representa uma checkbox.
     //checkboxes de entrada
-    private final JCheckBox[] in_Box;
-    private final JCheckBox outBox;
+    private final JCheckBox[] inBox; //in_Box é uma lista
+    private final Light out_Box;
 
     //construtor
     public GateView(Gate gate) {
@@ -35,9 +32,9 @@ public class GateView extends FixedPanel implements MouseListener, ItemListener 
         this.gate = gate;
         this.entradas =  gate.getInputSize();
         // inicializacao checkbox
-        in_Box = new JCheckBox[gate.getInputSize()];
-        for (int i = 0;i < entradas;i ++){in_Box[i] = new JCheckBox(); }
-        outBox = new JCheckBox();
+        inBox = new JCheckBox[gate.getInputSize()];
+        for (int i = 0;i < entradas;i ++){inBox[i] = new JCheckBox(); }//crio uma checkbox para cada entrada
+        out_Box = new Light(255,0,0);//crio uma saida de cor vermelha
 
 
 
@@ -58,31 +55,46 @@ public class GateView extends FixedPanel implements MouseListener, ItemListener 
 
         // Colocamos todas componentes aqui no contêiner.
         add(inLabel);
+        //for para add entrada conforme o numero de entradas na lista inBox
         for (int i = 0;i< entradas;i++){
-            add(in_Box[i], 20, (int) (140 + 45* Math.pow(-1,i)), 25, 25);
+            add(inBox[i], 20, (int) (140 + 45* Math.pow(-1,i)), 25, 25);
         }
         add(outLabel);
-        add(outBox,445, 135,50,50);
+        //add(out_Box,445, 135,50,50);
 
         String name = gate.toString() + ".png";
         URL url = getClass().getClassLoader().getResource(name);
         image = getToolkit().getImage(url);
+
+        out_Box.connect(0, gate);
         color = Color.BLACK;
         // Um campo de texto tem uma lista de observadores que
-        // reagem quando o usuário dá Enter depois de digitar.
+        // reagem quando o usuário clica.
         // Usamos o método addActionListener para adicionar esta
         // instância de GateView, ou seja "this", nessa
         // lista. Só que addActionListener espera receber um objeto
         // do tipo ActionListener como parâmetro. É por isso que
         // adicionamos o "implements ItemListener" lá em cima.
-        for (int i = 0;i< entradas;i++){in_Box[i].addItemListener( this); }
+        for (int i = 0;i< entradas;i++){
+            inBox[i].addItemListener( this);
+        }
 
         // O último campo de texto não pode ser editável, pois é
         // só para exibição. Logo, configuramos como desabilitado.
-        outBox.setEnabled(false);
+        //outBox.setEnabled(false);
         if ((gate instanceof NotGate) || (gate instanceof NandGate)  ){
-            outBox.setSelected(true);
+            out_Box.setColor(color);
         }
+
+        // Toda componente Swing tem uma lista de observadores
+        // que reagem quando algum evento de mouse acontece.
+        // Usamos o método addMouseListener para adicionar a
+        // própria componente, ou seja "this", nessa lista.
+        // Só que addMouseListener espera receber um objeto
+        // do tipo MouseListener como parâmetro. É por isso que
+        // adicionamos o "implements MouseListener" lá em cima.
+        addMouseListener(this);
+
         // Update é o método que definimos abaixo para atualizar o
         // último campo de acordo com os valores dos primeiros.
         // Precisamos chamar esse método no final da construção
@@ -90,7 +102,6 @@ public class GateView extends FixedPanel implements MouseListener, ItemListener 
         //update();
     }
 
-    //ajeitar essa parte, nao consegui desenvolver
     // link para ajudar-->https://docs.oracle.com/javase/tutorial/uiswing/components/button.html
     public void itemStateChanged(ItemEvent e) {
 
@@ -98,17 +109,30 @@ public class GateView extends FixedPanel implements MouseListener, ItemListener 
         for (int i = 0;i < entradas;i ++){signal[i] = new Switch();}
 
         for (int i = 0;i < entradas;i ++){
-            if (in_Box[i].isSelected()) {signal[i].turnOn();}
+            if (inBox[i].isSelected()) {signal[i].turnOn();}
             else {signal[i].turnOff();}
             gate.connect(i,signal[i]);
         }
 
-        outBox.setSelected(gate.read());
+        out_Box.setColor(color);
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
+        // Descobre em qual posição o clique ocorreu.
+        int x = e.getX();
+        int y = e.getY();
 
+        //445, 300, 25, 25
+        // Se o clique foi dentro do quadrado colorido...
+        if (x >= 445 && x < 470 && y >= 140 && y < 165) {
+
+            // ...então abrimos a janela seletora de cor...
+            color = JColorChooser.showDialog(this, null, color);
+            out_Box.setColor(color);
+            // ...e chamamos repaint para atualizar a tela.
+            repaint();
+        }
     }
 
     @Override
@@ -142,9 +166,9 @@ public class GateView extends FixedPanel implements MouseListener, ItemListener 
         // Desenha a imagem, passando sua posição e seu tamanho.
         g.drawImage(image, 40, 40, 400, 221, this);
 
-        // Desenha um quadrado cheio.
-        g.setColor(color);
-        g.fillRect(445, 200, 25, 25);
+        // Desenha um circulo cheio.
+        g.setColor(out_Box.getColor());
+        g.fillOval(445, 140, 25, 25);
 
         // Linha necessária para evitar atrasos
         // de renderização em sistemas Linux.
