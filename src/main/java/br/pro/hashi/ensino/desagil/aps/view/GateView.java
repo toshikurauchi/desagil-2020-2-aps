@@ -19,7 +19,8 @@ public class GateView extends FixedPanel implements MouseListener, ItemListener 
     // está sendo representada é guardado como atributo.
     private final Gate gate;
     private final int entradas;
-    private Color color;
+    private Color color_on;
+    private Color color_off;
     private final Image image;
     // A classe JCheckBox representa uma checkbox.
     //checkboxes de entrada
@@ -35,7 +36,7 @@ public class GateView extends FixedPanel implements MouseListener, ItemListener 
         // inicializacao checkbox
         inBox = new JCheckBox[gate.getInputSize()];
         for (int i = 0;i < entradas;i ++){inBox[i] = new JCheckBox(); }//crio uma checkbox para cada entrada
-        out_Box = new Light(255,0,0);//crio uma saida de cor vermelha
+        out_Box = new Light(0,0,0);//crio uma saida de cor vermelha
 
 
         // A classe JLabel representa um rótulo, ou seja,
@@ -54,7 +55,7 @@ public class GateView extends FixedPanel implements MouseListener, ItemListener 
 //        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         // Colocamos todas componentes aqui no contêiner.
-        add(inLabel);
+//        add(inLabel);
         //for para add entrada conforme o numero de entradas na lista inBox
         for (int i = 0;i< entradas;i++){
             if (inBox.length > 1) {
@@ -64,7 +65,7 @@ public class GateView extends FixedPanel implements MouseListener, ItemListener 
                 add(inBox[i], 20, (int) (140), 25, 25);
             }
         }
-        add(outLabel);
+//        add(outLabel);
         //add(out_Box,445, 135,50,50);
 
         String name = gate.toString() + ".png";
@@ -73,6 +74,7 @@ public class GateView extends FixedPanel implements MouseListener, ItemListener 
 
         out_Box.connect(0, gate);
         color = out_Box.getColor();
+
         // Um campo de texto tem uma lista de observadores que
         // reagem quando o usuário clica.
         // Usamos o método addActionListener para adicionar esta
@@ -92,6 +94,7 @@ public class GateView extends FixedPanel implements MouseListener, ItemListener 
         if ((gate instanceof NotGate) || (gate instanceof NandGate)  ){
             color = Color.RED;
             out_Box.setColor(color);
+
             repaint();
         }
         */
@@ -148,8 +151,8 @@ public class GateView extends FixedPanel implements MouseListener, ItemListener 
         if (Math.pow((445-x), 2) + Math.pow((140-y), 2) <= Math.pow(25, 2) && out_Box.getColor()!=Color.BLACK) {
         //if (x >= 445 && x < 470 && y >= 140 && y < 165 && out_Box.getColor()!=Color.BLACK) {
             // ...então abrimos a janela seletora de cor...
-            color = JColorChooser.showDialog(this, null, color);
-            out_Box.setColor(color);
+            color_on = JColorChooser.showDialog(this, null, color_on);
+            out_Box.setColor(color_on);
             // ...e chamamos repaint para atualizar a tela.
             repaint();
         }
