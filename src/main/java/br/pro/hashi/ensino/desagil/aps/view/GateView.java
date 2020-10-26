@@ -26,6 +26,7 @@ public class GateView extends FixedPanel implements MouseListener, ItemListener 
     private final JCheckBox[] inBox; //in_Box é uma lista
     private final Light out_Box;
 
+
     //construtor
     public GateView(Gate gate) {
         super(490, 350);
@@ -35,7 +36,6 @@ public class GateView extends FixedPanel implements MouseListener, ItemListener 
         inBox = new JCheckBox[gate.getInputSize()];
         for (int i = 0;i < entradas;i ++){inBox[i] = new JCheckBox(); }//crio uma checkbox para cada entrada
         out_Box = new Light(255,0,0);//crio uma saida de cor vermelha
-
 
 
         // A classe JLabel representa um rótulo, ou seja,
@@ -57,7 +57,12 @@ public class GateView extends FixedPanel implements MouseListener, ItemListener 
         add(inLabel);
         //for para add entrada conforme o numero de entradas na lista inBox
         for (int i = 0;i< entradas;i++){
-            add(inBox[i], 20, (int) (140 + 45* Math.pow(-1,i)), 25, 25);
+            if (inBox.length > 1) {
+                add(inBox[i], 20, (int) (140 + 45 * Math.pow(-1, i)), 25, 25);
+            }
+            else{
+                add(inBox[i], 20, (int) (140), 25, 25);
+            }
         }
         add(outLabel);
         //add(out_Box,445, 135,50,50);
@@ -67,7 +72,7 @@ public class GateView extends FixedPanel implements MouseListener, ItemListener 
         image = getToolkit().getImage(url);
 
         out_Box.connect(0, gate);
-        color = Color.BLACK;
+        color = out_Box.getColor();
         // Um campo de texto tem uma lista de observadores que
         // reagem quando o usuário clica.
         // Usamos o método addActionListener para adicionar esta
@@ -81,10 +86,15 @@ public class GateView extends FixedPanel implements MouseListener, ItemListener 
 
         // O último campo de texto não pode ser editável, pois é
         // só para exibição. Logo, configuramos como desabilitado.
-        //outBox.setEnabled(false);
+        //out_Box.setEnabled(false);
+
+        /*
         if ((gate instanceof NotGate) || (gate instanceof NandGate)  ){
+            color = Color.RED;
             out_Box.setColor(color);
+            repaint();
         }
+        */
 
         // Toda componente Swing tem uma lista de observadores
         // que reagem quando algum evento de mouse acontece.
@@ -100,21 +110,31 @@ public class GateView extends FixedPanel implements MouseListener, ItemListener 
         // Precisamos chamar esse método no final da construção
         // para garantir que a interface não nasce inconsistente.
         //update();
+        repaint();
     }
 
     // link para ajudar-->https://docs.oracle.com/javase/tutorial/uiswing/components/button.html
     public void itemStateChanged(ItemEvent e) {
 
         Switch[] signal = new Switch[gate.getInputSize()];
-        for (int i = 0;i < entradas;i ++){signal[i] = new Switch();}
+        for (int i = 0;i < entradas;i ++){
+            signal[i] = new Switch();
+        }
 
         for (int i = 0;i < entradas;i ++){
-            if (inBox[i].isSelected()) {signal[i].turnOn();}
-            else {signal[i].turnOff();}
+            if (inBox[i].isSelected()) {
+                signal[i].turnOn();
+            }
+            else {
+                signal[i].turnOff();
+            }
             gate.connect(i,signal[i]);
         }
 
+        //color = Color.RED;
         out_Box.setColor(color);
+        repaint();
+
     }
 
     @Override
@@ -124,9 +144,9 @@ public class GateView extends FixedPanel implements MouseListener, ItemListener 
         int y = e.getY();
 
         //445, 300, 25, 25
-        // Se o clique foi dentro do quadrado colorido...
-        if (x >= 445 && x < 470 && y >= 140 && y < 165) {
-
+        // Se o clique foi dentro do circulo colorido...
+        if (Math.pow((445-x), 2) + Math.pow((140-y), 2) <= Math.pow(25, 2) && out_Box.getColor()!=Color.BLACK) {
+        //if (x >= 445 && x < 470 && y >= 140 && y < 165 && out_Box.getColor()!=Color.BLACK) {
             // ...então abrimos a janela seletora de cor...
             color = JColorChooser.showDialog(this, null, color);
             out_Box.setColor(color);
