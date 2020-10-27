@@ -11,8 +11,8 @@ public class AndGate extends Gate {
         nandOut = new NandGate();
 
         //conectando o nandin no nandout
-        nandOut.connect(0,nandIn);
-        nandOut.connect(1,nandIn);
+        nandOut.connect(0, nandIn);
+        nandOut.connect(1, nandIn);
     }
 
     @Override

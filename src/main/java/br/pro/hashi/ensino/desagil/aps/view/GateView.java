@@ -4,9 +4,11 @@ import br.pro.hashi.ensino.desagil.aps.model.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.net.URL;
-import java.util.LinkedList;
 
 // A classe JPanel representa uma das componentes mais
 // simples da Swing. A função dela é simplesmente ser
@@ -19,24 +21,25 @@ public class GateView extends FixedPanel implements MouseListener, ItemListener 
     // está sendo representada é guardado como atributo.
     private final Gate gate;
     private final int entradas;
-    private Color color_on;
-    private Color color_off;
     private final Image image;
     // A classe JCheckBox representa uma checkbox.
     //checkboxes de entrada
     private final JCheckBox[] inBox; //in_Box é uma lista
     private final Light out_Box;
+    private Color color_on;
+    private Color color_off;
 
     //construtor
     public GateView(Gate gate) {
         super(490, 350);
         this.gate = gate;
-        this.entradas =  gate.getInputSize();
+        this.entradas = gate.getInputSize();
         // inicializacao checkbox
         inBox = new JCheckBox[gate.getInputSize()];
-        for (int i = 0;i < entradas;i ++){inBox[i] = new JCheckBox(); }//crio uma checkbox para cada entrada
-        out_Box = new Light(0,0,0);//crio uma saida de cor vermelha
-
+        for (int i = 0; i < entradas; i++) {
+            inBox[i] = new JCheckBox();
+        }//crio uma checkbox para cada entrada
+        out_Box = new Light(0, 0, 0);//crio uma saida de cor vermelha
 
 
         // A classe JLabel representa um rótulo, ou seja,
@@ -57,8 +60,12 @@ public class GateView extends FixedPanel implements MouseListener, ItemListener 
         // Colocamos todas componentes aqui no contêiner.
 //        add(inLabel);
         //for para add entrada conforme o numero de entradas na lista inBox
-        for (int i = 0;i< entradas;i++){
-            add(inBox[i], 20, (int) (140 + 45* Math.pow(-1,i)), 25, 25);
+        for (int i = 0; i < entradas; i++) {
+            if (entradas > 1) {
+                add(inBox[i], 20, (int) (140 + 45 * Math.pow(-1, i)), 25, 25);
+            } else {
+                add(inBox[i], 20, (int) (140), 25, 25);
+            }
         }
 //        add(outLabel);
         //add(out_Box,445, 135,50,50);
@@ -77,14 +84,15 @@ public class GateView extends FixedPanel implements MouseListener, ItemListener 
         // lista. Só que addActionListener espera receber um objeto
         // do tipo ActionListener como parâmetro. É por isso que
         // adicionamos o "implements ItemListener" lá em cima.
-        for (int i = 0;i< entradas;i++){
-            inBox[i].addItemListener( this);
+        for (int i = 0; i < entradas; i++) {
+            inBox[i].addItemListener(this);
         }
 
         // O último campo de texto não pode ser editável, pois é
         // só para exibição. Logo, configuramos como desabilitado.
         //outBox.setEnabled(false);
-        if ((gate instanceof NotGate) || (gate instanceof NandGate)  ){
+
+        if ((gate instanceof NotGate) || (gate instanceof NandGate)) {
             out_Box.setColor(color_on);
             repaint();
         }
@@ -109,15 +117,23 @@ public class GateView extends FixedPanel implements MouseListener, ItemListener 
     public void itemStateChanged(ItemEvent e) {
 
         Switch[] signal = new Switch[gate.getInputSize()];
-        for (int i = 0;i < entradas;i ++){signal[i] = new Switch();}
-
-        for (int i = 0;i < entradas;i ++){
-            if (inBox[i].isSelected()) {signal[i].turnOn();}
-            else {signal[i].turnOff();}
-            gate.connect(i,signal[i]);
+        for (int i = 0; i < entradas; i++) {
+            signal[i] = new Switch();
         }
-        if (gate.read()){ out_Box.setColor(color_on);}
-        else {out_Box.setColor((color_off));}
+
+        for (int i = 0; i < entradas; i++) {
+            if (inBox[i].isSelected()) {
+                signal[i].turnOn();
+            } else {
+                signal[i].turnOff();
+            }
+            gate.connect(i, signal[i]);
+        }
+        if (gate.read()) {
+            out_Box.setColor(color_on);
+        } else {
+            out_Box.setColor((color_off));
+        }
         repaint();
     }
 
@@ -129,7 +145,9 @@ public class GateView extends FixedPanel implements MouseListener, ItemListener 
 
         //445, 300, 25, 25
         // Se o clique foi dentro do quadrado colorido...
-        if (x >= 445 && x < 470 && y >= 140 && y < 165) {
+        //Math.pow((x - 247), 2) + Math.pow((y - 105), 2) <= 225
+        //x >= 445 && x < 470 && y >= 140 && y < 165
+        if (Math.pow((445 - x), 2) + Math.pow((140 - y), 2) <= Math.pow(25, 2) && out_Box.getColor()!= Color.BLACK) {
 
             // ...então abrimos a janela seletora de cor...
             color_on = JColorChooser.showDialog(this, null, color_on);
@@ -158,6 +176,7 @@ public class GateView extends FixedPanel implements MouseListener, ItemListener 
     public void mouseExited(MouseEvent e) {
 
     }
+
     @Override
     public void paintComponent(Graphics g) {
 

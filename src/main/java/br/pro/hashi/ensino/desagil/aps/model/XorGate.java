@@ -15,10 +15,10 @@ public class XorGate extends Gate {
         nandOut = new NandGate();
 
 
-        nand0Mid.connect(1,nandIn);
-        nand1Mid.connect(0,nandIn);
-        nandOut.connect(0,nand0Mid);
-        nandOut.connect(1,nand1Mid);
+        nand0Mid.connect(1, nandIn);
+        nand1Mid.connect(0, nandIn);
+        nandOut.connect(0, nand0Mid);
+        nandOut.connect(1, nand1Mid);
     }
 
     @Override

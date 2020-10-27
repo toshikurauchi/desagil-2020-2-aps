@@ -13,8 +13,8 @@ public class OrGate extends Gate {
         nand1In = new NandGate();
         nandOut = new NandGate();
 
-        nandOut.connect(0,nand0In);
-        nandOut.connect(1,nand1In);
+        nandOut.connect(0, nand0In);
+        nandOut.connect(1, nand1In);
     }
 
     @Override

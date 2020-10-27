@@ -17,7 +17,6 @@ public class NandGate extends Gate {
     }
 
 
-
     @Override
     public void connect(int inputIndex, Emitter emitter) {
         if (inputIndex < 0 || inputIndex > 1) {
