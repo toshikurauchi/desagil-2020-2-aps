@@ -26,7 +26,7 @@ public class AndGate extends Gate {
     public void connect(int inputIndex, Emitter emitter) {
         switch (inputIndex) {
             case 0:
-                nandIn.connect(0, emitter);
+                nagindIn.connect(0, emitter);
                 break;
             case 1:
                 nandIn.connect(1, emitter);
