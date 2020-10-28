@@ -28,7 +28,7 @@ public class NandGate extends Gate {
     // Senão, simplesmente armazena emitter[inputIndex] em emitters.
     @Override
     public void connect(int inputIndex, Emitter emitter) {
-        if (inputIndex < 0 || inputIndex > 2) {
+        if (inputIndex < 0 || inputIndex > 1) {
             throw new IndexOutOfBoundsException(inputIndex);
         }
         emitters[inputIndex] = emitter;
