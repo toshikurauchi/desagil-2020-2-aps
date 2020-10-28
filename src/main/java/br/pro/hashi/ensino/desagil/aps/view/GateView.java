@@ -80,8 +80,8 @@ public class GateView extends FixedPanel implements ActionListener, MouseListene
         int x = event.getX();
         int y = event.getY();
 
-        // Se o clique foi dentro do quadrado colorido...
-        if (x >= 360 && x < 380 && y >= 90 && y < 110) {
+        // Se o clique foi dentro do circulo colorido...
+        if (Math.sqrt(Math.pow((x - 380), 2) + Math.pow((y - 90), 2)) < 20) {
 
             // ...então abrimos a janela seletora de cor...
             color = JColorChooser.showDialog(this, null, color);
