@@ -14,6 +14,10 @@ public class NotGate extends Gate {
         return nand.read();
     }
 
+
+    //inputIndex só pode ser 0, pois inputSize = 1
+    // Se outro valor for recebido, o método lança uma IndexOutOfBoundsException
+    // Senão, simplesmente chamo o metodo connect da instancia de nand para conectar o parametro input index ao parametro emitter
     @Override
     public void connect(int inputIndex, Emitter emitter) {
         if (inputIndex != 0) {

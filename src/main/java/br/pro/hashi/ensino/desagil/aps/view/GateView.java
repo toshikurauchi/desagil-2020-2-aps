@@ -4,10 +4,7 @@ import br.pro.hashi.ensino.desagil.aps.model.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 import java.net.URL;
 
 // A classe JPanel representa uma das componentes mais
@@ -16,85 +13,91 @@ import java.net.URL;
 // A razão de implementar ActionListener está mais abaixo.
 public class GateView extends FixedPanel implements MouseListener, ItemListener {
 
-    // A ideia é que essa componente gráfica represente
-    // um componente especifico. Esse componente que
-    // está sendo representada é guardado como atributo.
-    private final Gate gate;
-    private final int entradas;
+    private final int entradas; //vai me retornar o numero de entradas do meu objeto
+    private final Switch[] switches;
+
+    private final JCheckBox[] inBox; //inBox é uma lista de checkboxes
+    private final Light outColor; //outColor é um sinal colorido
+
+    private Color color;
     private final Image image;
-    // A classe JCheckBox representa uma checkbox.
-    //checkboxes de entrada
-    private final JCheckBox[] inBox; //in_Box é uma lista
-    private final Light out_Box;
-    private Color color_on;
-    private Color color_off;
+
 
     //construtor
     public GateView(Gate gate) {
+
+        // Como subclasse de FixedPanel, esta classe agora
+        // exige que uma largura e uma altura sejam fixadas.
         super(490, 350);
-        this.gate = gate;
-        this.entradas = gate.getInputSize();
-        // inicializacao checkbox
+
+        //atribuo o parametro gate ao meu atributo
+        // A ideia é que essa componente gráfica represente
+        // um componente especifico. Esse componente que
+        // está sendo representada é guardado como atributo.
+
+        this.entradas = gate.getInputSize(); //vai me retornar o numero de entradas que eu tenho
+
+        //Vou criar um vetor com o numero de pinos de entrada do gate
+        //e armazenar uma nova checkbox em inbox[inputIndex]
         inBox = new JCheckBox[gate.getInputSize()];
         for (int i = 0; i < entradas; i++) {
             inBox[i] = new JCheckBox();
-        }//crio uma checkbox para cada entrada
-        out_Box = new Light(0, 0, 0);//crio uma saida de cor vermelha
+        }
+
+        //crio uma saida de cor True default vermelha
+        outColor = new Light(255, 0, 0);
+        // Inicializamos o atributo de cor a partir da cor do sinal de saida
+        color = outColor.getColor();
 
 
-        // A classe JLabel representa um rótulo, ou seja,
-        // um texto não-editável que queremos colocar na
-        // interface para identificar alguma coisa. Não
-        // precisa ser atributo, pois não precisamos mais
-        // mexer nesses objetos depois de criar e adicionar.
-        JLabel inLabel = new JLabel("Entrada:");
-        JLabel outLabel = new JLabel("Saída:");
+        //Vou criar um vetor com o numero de pinos de entrada do gate
+        //e armazenar um novo switch em switches[inputIndex]
+        //Lembrando que simulador "pluga" essas fontes especificadas pelo switch
+        //nas portas lógicas para controlar a entrada (como vou fazer o update)
+        //para isso preciso conectar ao emissor
+        switches = new Switch[gate.getInputSize()];
+        for (int i = 0; i < entradas; i++) {
+            switches[i] = new Switch();
+            gate.connect(i, switches[i]);
+        }
 
 
-        // Um JPanel tem um layout, ou seja, um padrão para
-        // organizar as componentes dentro dele. A linha abaixo
-        // estabelece um dos padrões mais simples: simplesmente
-        // colocar uma componente debaixo da outra, alinhadas.
-//        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        // Adicionando os componentes ao meu painel
 
+        // Como subclasse de FixedPanel, agora podemos definir a
+        // posição e o tamanho de cada componente ao adicioná-la.
         // Colocamos todas componentes aqui no contêiner.
-//        add(inLabel);
+        // o resto dos meus componentes serao desenhados em paintComponent
+
+        //add inBox
         //for para add entrada conforme o numero de entradas na lista inBox
         for (int i = 0; i < entradas; i++) {
             if (entradas > 1) {
-                add(inBox[i], 20, (int) (140 + 45 * Math.pow(-1, i)), 25, 25);
+                add(inBox[i], 80, (int) (137 + 30* Math.pow(-1, i)), 25, 25);
             } else {
-                add(inBox[i], 20, (int) (140), 25, 25);
+                add(inBox[i], 80, 137, 25, 25);
             }
         }
-//        add(outLabel);
-        //add(out_Box,445, 135,50,50);
 
+        //fazendo o carregamento da imagem
         String name = gate.toString() + ".png";
         URL url = getClass().getClassLoader().getResource(name);
         image = getToolkit().getImage(url);
 
-        out_Box.connect(0, gate);
-        color_off = Color.BLACK;
-        color_on = Color.RED;
-        // Um campo de texto tem uma lista de observadores que
+        //atribuo o emitter gate recebido como parametro ao meu atributo emitter definido em Light que será a minha
+        //conecto a minha saida ao sinal emtido
+        outColor.connect(0, gate);
+
+        // Um checkbox tem uma lista de observadores que
         // reagem quando o usuário clica.
-        // Usamos o método addActionListener para adicionar esta
+        // Usamos o método addItemListener para adicionar esta
         // instância de GateView, ou seja "this", nessa
-        // lista. Só que addActionListener espera receber um objeto
-        // do tipo ActionListener como parâmetro. É por isso que
+        // lista. Só que addItemListener espera receber um objeto
+        // do tipo ItemListener como parâmetro. É por isso que
         // adicionamos o "implements ItemListener" lá em cima.
+        //Aqui, vou addItemListener para cada uma das checkboxes de entrada
         for (int i = 0; i < entradas; i++) {
             inBox[i].addItemListener(this);
-        }
-
-        // O último campo de texto não pode ser editável, pois é
-        // só para exibição. Logo, configuramos como desabilitado.
-        //outBox.setEnabled(false);
-
-        if ((gate instanceof NotGate) || (gate instanceof NandGate)) {
-            out_Box.setColor(color_on);
-            repaint();
         }
 
         // Toda componente Swing tem uma lista de observadores
@@ -110,31 +113,28 @@ public class GateView extends FixedPanel implements MouseListener, ItemListener 
         // último campo de acordo com os valores dos primeiros.
         // Precisamos chamar esse método no final da construção
         // para garantir que a interface não nasce inconsistente.
-        //update();
+        update();
     }
 
-    // link para ajudar-->https://docs.oracle.com/javase/tutorial/uiswing/components/button.html
-    public void itemStateChanged(ItemEvent e) {
 
-        Switch[] signal = new Switch[gate.getInputSize()];
+    //Irá atualizar o valor do campo a partir do meu inBox
+    public void update() {
+        //loop que vai atualizar o sinal emitido nas portas lógicas
         for (int i = 0; i < entradas; i++) {
-            signal[i] = new Switch();
-        }
-
-        for (int i = 0; i < entradas; i++) {
+            //se a checkbow estiver selecionada signal=True, senao signal=False
             if (inBox[i].isSelected()) {
-                signal[i].turnOn();
+                switches[i].turnOn();
             } else {
-                signal[i].turnOff();
+                switches[i].turnOff();
             }
-            gate.connect(i, signal[i]);
         }
-        if (gate.read()) {
-            out_Box.setColor(color_on);
-        } else {
-            out_Box.setColor((color_off));
-        }
+        //com os sinais atualizados, posso recolorir meu outbox
         repaint();
+    }
+
+    @Override
+    public void itemStateChanged(ItemEvent e) {
+        update();
     }
 
     @Override
@@ -143,15 +143,15 @@ public class GateView extends FixedPanel implements MouseListener, ItemListener 
         int x = e.getX();
         int y = e.getY();
 
-        //445, 300, 25, 25
-        // Se o clique foi dentro do quadrado colorido...
-        //Math.pow((x - 247), 2) + Math.pow((y - 105), 2) <= 225
-        //x >= 445 && x < 470 && y >= 140 && y < 165
-        if (Math.pow((445 - x), 2) + Math.pow((140 - y), 2) <= Math.pow(25, 2) && out_Box.getColor()!= Color.BLACK) {
+        // Se o clique foi dentro do circulo colorido...
+        //330, 137
+
+        if (Math.pow((x-330-12.5), 2) + Math.pow((137+12.5-y), 2) <= Math.pow(12.5, 2) && outColor.isOn()) {
 
             // ...então abrimos a janela seletora de cor...
-            color_on = JColorChooser.showDialog(this, null, color_on);
-            out_Box.setColor(color_on);
+            color = JColorChooser.showDialog(this, null, color); //poderia lancar uma excecao se escolher preto
+            outColor.setColor(color);
+
             // ...e chamamos repaint para atualizar a tela.
             repaint();
         }
@@ -159,7 +159,9 @@ public class GateView extends FixedPanel implements MouseListener, ItemListener 
 
     @Override
     public void mousePressed(MouseEvent e) {
-
+        // Não precisamos de uma reação específica à ação de pressionar
+        // um botão do mouse, mas o contrato com MouseListener obriga
+        // esse método a existir, então simplesmente deixamos vazio.
     }
 
     @Override
@@ -187,16 +189,14 @@ public class GateView extends FixedPanel implements MouseListener, ItemListener 
         super.paintComponent(g);
 
         // Desenha a imagem, passando sua posição e seu tamanho.
-        g.drawImage(image, 40, 40, 400, 221, this);
+        g.drawImage(image, 40, 80, 400, 140, this);
 
         // Desenha um circulo cheio.
-        g.setColor(out_Box.getColor());
-        g.fillOval(445, 140, 25, 25);
+        g.setColor(outColor.getColor());
+        g.fillOval(330, 137, 25, 25);
 
         // Linha necessária para evitar atrasos
         // de renderização em sistemas Linux.
         getToolkit().sync();
     }
-//    private void update() {}
-
 }

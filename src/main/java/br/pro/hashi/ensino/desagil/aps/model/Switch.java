@@ -1,10 +1,13 @@
 package br.pro.hashi.ensino.desagil.aps.model;
 
+//especifica um modelo para fontes ligáveis e desligáveis
+//sao apenas emissores
+//simulador "pluga" essas fontes (signal emitido) nas portas lógicas para controlar a entrada
 public class Switch implements Emitter {
     private boolean signal;
 
     public Switch() {
-        signal = false;
+        signal = false; //signal default é false
     }
 
     //será chamado quando a checkbox correspondente for marcada

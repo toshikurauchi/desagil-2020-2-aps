@@ -16,19 +16,20 @@ import java.util.LinkedList;
 public class View extends JPanel implements ItemListener, ActionListener {
 
     // A ideia é que essa componente gráfica mostre um menu
-    // que permite selecionar uma calculadora e também mostre
-    // a representação gráfica da calculadora atualmente
+    // que permite selecionar uma porta e também mostre
+    // a representação gráfica da porta atualmente
     // selecionada. Esse menu é uma instância de JComboBox
-    // e essa representação gráfica da calculadora é uma
-    // instância da classe CalculatorView, que você já leu.
+    // e essa representação gráfica da porta é uma
+    // instância da classe GateView
     private final JComboBox<Gate> menu;
     private GateView gateView;
 
-    // O construtor recebe uma lista de calculadoras, que
+    // O construtor recebe uma lista de portas, que
     // devem ser adicionadas ao menu. O menu consegue mostrar
-    // os nomes das calculadoras graças ao método toString.
+    // os nomes das portas graças ao método toString.
     public View(LinkedList<Gate> model) {
         menu = new JComboBox<>();
+        //para cada porta na lista de portas eu add ao menu
         for (Gate gate : model) {
             menu.addItem(gate);
         }
@@ -40,9 +41,9 @@ public class View extends JPanel implements ItemListener, ActionListener {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         // Vamos adicionar a este JPanel o menu e a representação
-        // gráfica da calculadora atualmente selecionada, que é
+        // gráfica da porta atualmente selecionada, que é
         // a primeira. Como sempre, a contagem começa de zero.
-        // A implementação de addCalculatorView está logo abaixo.
+        // A implementação de addGateView está logo abaixo.
         add(menu);
         addGateView(0);
 

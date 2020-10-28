@@ -6,7 +6,7 @@ public class OrGate extends Gate {
     private final NandGate nandOut;
 
     //construtor
-    //devemos criar os nands e conecta-los
+    //devemos criar as instancias de nand e conectar os pinos de nandOut às saidas dos nandsin
     public OrGate() {
         super("OR", 2);
         nand0In = new NandGate();
@@ -17,6 +17,7 @@ public class OrGate extends Gate {
         nandOut.connect(1, nand1In);
     }
 
+    //vou retornar o valor de nandOut definido no construtor
     @Override
     public boolean read() {
         return nandOut.read();
