@@ -21,7 +21,7 @@ public class NorGate extends Gate {
 
     @Override
     public boolean read() {
-        return nands[2].read();
+        return nands[3].read();
     }
 
     @Override
