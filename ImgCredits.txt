@@ -1,0 +1,5 @@
+porta AND: https://www.clipartmax.com/middle/m2i8K9H7b1H7K9K9_and-gate-clip-art-logic-gate-png/
+porta OR: https://www.onlinewebfonts.com/icon/485272
+porta NAND: https://www.onlinewebfonts.com/icon/485268
+porta XOR: https://pnghut.com/download/Wc657mdQJr
+porta NOT: http://www.pages.drexel.edu/~djw89/Lab6.html

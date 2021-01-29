@@ -1,40 +1,38 @@
 package br.pro.hashi.ensino.desagil.aps.model;
 
 public class OrGate extends Gate {
-    private final NandGate nandTop;
-    private final NandGate nandBottom;
-    private final NandGate nandRight;
+    private final NandGate[] nands;
 
     public OrGate() {
         super("OR", 2);
 
-        nandTop = new NandGate();
+        nands = new NandGate[3];
 
-        nandBottom = new NandGate();
+        nands[0] = new NandGate();
+        nands[1] = new NandGate();
+        nands[2] = new NandGate();
 
-        nandRight = new NandGate();
-        nandRight.connect(0, nandTop);
-        nandRight.connect(1, nandBottom);
+        nands[2].connect(0, nands[0]);
+        nands[2].connect(1, nands[1]);
     }
 
     @Override
     public boolean read() {
-        return nandRight.read();
+        return nands[2].read();
     }
 
     @Override
     public void connect(int inputIndex, Emitter emitter) {
-        switch (inputIndex) {
-            case 0:
-                nandTop.connect(0, emitter);
-                nandTop.connect(1, emitter);
-                break;
-            case 1:
-                nandBottom.connect(0, emitter);
-                nandBottom.connect(1, emitter);
-                break;
-            default:
-                throw new IndexOutOfBoundsException(inputIndex);
+        if (inputIndex < 0 || inputIndex > 1) {
+            throw new IndexOutOfBoundsException(inputIndex);
+        }
+
+        if (inputIndex == 0) {
+            nands[0].connect(0, emitter);
+            nands[0].connect(1, emitter);
+        } else {
+            nands[1].connect(0, emitter);
+            nands[1].connect(1, emitter);
         }
     }
 }
